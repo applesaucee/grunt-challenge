@@ -1,20 +1,38 @@
 module.exports = function(grunt) {
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json')
-        
-        jshint: {
-            // define the files to lint
-            files: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
-            // configure JSHint (documented at http://www.jshint.com/docs/)
-            options: {
-                // more options here if you want to override JSHint defaults
-                globals: {
-                    jQuery: true,
-                    console: true,
-                    module: true
-                }
-            }
-        },
-                     
-    });
-}
+	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'), 
+		uglify: {
+  			options: {
+    			banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+  			},
+  			dist: {
+    			files: {
+      			'dist/<%= pkg.name %>.min.js': ['js/script.js']
+    			}
+  			}
+		},
+		jshint: {
+  			files: ['gruntfile.js', 'js/app.js', 'js/*.js'], 			
+  			options: {     		
+    			globals: {
+      				jQuery: true,
+      				console: true,
+      				module: true
+    			}
+  			}
+		},
+		cssmin: {
+  			minify: {
+    			expand: true,
+    			src: ['css/main.css'],
+    			dest: 'dist/',
+    			ext: '.min.css'
+  			}
+		}
+	});
+
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.registerTask('default', ['jshint', 'cssmin', 'uglify']);
+};
